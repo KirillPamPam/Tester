@@ -40,7 +40,7 @@ public class ThemeServiceImpl implements ThemeService {
     @Override
     @Transactional
     public void deleteAll(Theme theme) {
-        answerDao.deleteAnswers(theme.getThemeId());
+        answerDao.deleteAnswers(themeDao.getTheme(theme.getTheme()));
         themeDao.deleteAll(theme);
     }
 }

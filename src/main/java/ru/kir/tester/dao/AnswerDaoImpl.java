@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kir.tester.domain.Answer;
+import ru.kir.tester.domain.Theme;
 
 /**
  * Created by Kirill Zhitelev on 13.09.2016.
@@ -29,11 +30,12 @@ public class AnswerDaoImpl implements AnswerDao {
     }
 
     @Override
-    public void deleteAnswers(Integer id) {
+    public void deleteAnswers(Theme theme) {
         Session session = sessionFactory.getCurrentSession();
         Query query = session.createQuery("delete from Answer a where a.answerId in " +
                 "(select q.answer.answerId from Question q where q.theme.id=:id)");
-        query.setParameter("id", id);
+        query.setParameter("id", theme.getThemeId());
         query.executeUpdate();
+        System.out.println(theme.getThemeId());
     }
 }
