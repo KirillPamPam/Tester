@@ -68,11 +68,13 @@ public class TestConstructor {
         questions.setAlignment(Pos.CENTER);
 
         correctAnswerField.setPrefWidth(250);
+        correctAnswerField.setStyle("-fx-background-color: green;");
         HBox correct = new HBox(10, correctAnswer, correctAnswerField);
         correct.setAlignment(Pos.CENTER);
 
         wrongAnswersField.setMaxSize(300, 80);
         wrongAnswersField.setPrefWidth(200);
+        wrongAnswersField.setStyle("-fx-background-color: red;");
         removeAnswer.setDisable(true);
         HBox wrong = new HBox(5, wrongAnswer, wrongAnswersField, addAnswer, removeAnswer);
         wrong.setAlignment(Pos.CENTER);
@@ -93,8 +95,6 @@ public class TestConstructor {
                 String question = questionArea.getText();
                 String correctAnswer = correctAnswerField.getText();
                 String wrongAnswers = makeWrongAnswersForBase(wrongAnswersField.getText(), answers);
-
-                System.out.println(wrongAnswers);
 
                 if(themeField.getValue() == null ||
                         theme.equals("") || question.equals("") || correctAnswer.equals("")
@@ -129,10 +129,9 @@ public class TestConstructor {
 
                 TextField newAnswer = new TextField();
                 newAnswer.setMaxWidth(250);
+                newAnswer.setStyle("-fx-background-color: red;");
                 answersBox.getChildren().add(newAnswer);
                 answers.add(newAnswer);
-
-                System.out.println("Add " + answers.size());
 
                 if(answers.size() == 4) {
                     addAnswer.setDisable(true);
@@ -146,7 +145,6 @@ public class TestConstructor {
 
                 answersBox.getChildren().remove(answers.size() - 1);
                 answers.remove(answers.size() - 1);
-                System.out.println("Remove " + answers.size());
 
                 if(answers.size() == 0) {
                     removeAnswer.setDisable(true);
