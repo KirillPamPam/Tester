@@ -4,10 +4,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,6 +46,7 @@ public class TestPage {
     private Label correct = new Label("Верно: ");
     private Label wrong = new Label("Неверно: ");
     private DataHelper dataHelper;
+    private ImageView view = new ImageView(new Image("/galochka.png"));
 
     public TestPage(Stage stage, MainTester tester) {
         this.stage = stage;
@@ -77,6 +81,17 @@ public class TestPage {
         hBoxLabel.getChildren().addAll(correct, wrong);
         hBoxButton.getChildren().addAll(menu, completedTest);
         box.getChildren().addAll(hBoxButton, hBoxLabel, anchor);
+        ScrollBar bar = new ScrollBar();
+        bar.setOrientation(Orientation.VERTICAL);
+        bar.setMax(1000);
+        box.getChildren().add(bar);
+        bar.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                box.setLayoutY(newValue.doubleValue());
+            }
+        });
+
         scene = new Scene(box);
 
         addEventHandler();
@@ -164,11 +179,15 @@ public class TestPage {
 
     private void workWithButton(int page) {
         for (RadioButton radioButton: radioButtons) {
-            if(!radioButton.getText().equals(correctAnswers.get(page)) && radioButton.isSelected()) {
-                radioButton.setText(radioButton.getText() + "   Верно: " + correctAnswers.get(page));
+            if(radioButton.getText().equals(correctAnswers.get(page))) {
+                radioButton.setGraphic(view);
             }
             else
                 radioButton.setDisable(true);
+/*            if(!radioButton.getText().equals(correctAnswers.get(page)) && radioButton.isSelected()) {
+                //radioButton.setText(radioButton.getText() + "   Верно: " + correctAnswers.get(page));
+                radioButton.setGraphic(view);
+            }*/
         }
     }
 
@@ -178,6 +197,8 @@ public class TestPage {
 
     private void setToggleGroup(ToggleGroup group, List<RadioButton> radioButtons) {
         for (RadioButton but: radioButtons) {
+            but.setMaxWidth(450);
+            but.setWrapText(true);
             but.setToggleGroup(group);
         }
     }
