@@ -8,7 +8,7 @@ import ru.kir.tester.common.DataHelper;
 import ru.kir.tester.domain.Theme;
 import ru.kir.tester.service.QuestionService;
 import ru.kir.tester.service.ThemeService;
-import ru.kir.tester.ui.pages.MainPage;
+import ru.kir.tester.ui.pages.EvgMainPage;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class MainTester extends Application {
     private QuestionService questionService;
     private ThemeService themeService;
     private ApplicationContext context;
-    private MainPage mainPage;
+    private EvgMainPage evgMainPage;
     private List<Theme> themes;
     private DataHelper dataHelper;
 
@@ -37,9 +37,10 @@ public class MainTester extends Application {
     public void start(Stage stage) throws Exception {
         initApp();
 
-        mainPage = new MainPage(stage, this);
 
-        stage.setScene(mainPage.getScene());
+        evgMainPage = new EvgMainPage(stage, this);
+
+        stage.setScene(evgMainPage.getScene());
 
         stage.setWidth(500);
         stage.setHeight(460);
@@ -48,8 +49,8 @@ public class MainTester extends Application {
         stage.show();
     }
 
-    public MainPage getMainPage() {
-        return mainPage;
+    public EvgMainPage getEvgMainPage() {
+        return evgMainPage;
     }
 
     public List<Theme> getThemes() {

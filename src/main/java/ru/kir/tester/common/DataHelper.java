@@ -86,7 +86,9 @@ public class DataHelper {
             questionService.saveQuestion(baseQuestion);
         }
 
+    }
 
-
+    public ObservableList<String> getThemes() {
+        return themes;
     }
 }

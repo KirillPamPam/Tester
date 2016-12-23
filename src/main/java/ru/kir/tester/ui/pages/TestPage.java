@@ -4,7 +4,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -81,16 +80,6 @@ public class TestPage {
         hBoxLabel.getChildren().addAll(correct, wrong);
         hBoxButton.getChildren().addAll(menu, completedTest);
         box.getChildren().addAll(hBoxButton, hBoxLabel, anchor);
-        ScrollBar bar = new ScrollBar();
-        bar.setOrientation(Orientation.VERTICAL);
-        bar.setMax(1000);
-        box.getChildren().add(bar);
-        bar.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                box.setLayoutY(newValue.doubleValue());
-            }
-        });
 
         scene = new Scene(box);
 
@@ -101,7 +90,7 @@ public class TestPage {
         menu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                stage.setScene(tester.getMainPage().getScene());
+                stage.setScene(tester.getEvgMainPage().getScene());
             }
         });
 

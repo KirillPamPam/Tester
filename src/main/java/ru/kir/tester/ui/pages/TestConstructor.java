@@ -5,6 +5,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,7 +15,6 @@ import ru.kir.tester.common.DataHelper;
 import ru.kir.tester.common.TesterResources;
 import ru.kir.tester.ui.MainTester;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.kir.tester.common.Helper.makeInformationWindow;
@@ -33,14 +34,16 @@ public class TestConstructor {
     private ComboBox themeField;
     private TextArea questionArea = new TextArea();
     private TextField correctAnswerField = new TextField();
-    private TextField wrongAnswersField = new TextField();
+    //private TextField wrongAnswersField = new TextField();
     private Button addQuestion = new Button("Сохранить");
     private Button menu = new Button("В меню");
     private DataHelper dataHelper;
     private Button addAnswer = new Button("Добавить");
     private Button removeAnswer = new Button("Удалить");
-    private List<TextField> answers = new ArrayList<>();
+    //private List<TextField> answers = new ArrayList<>();
     private VBox answersBox = new VBox(10);
+    private TextArea wrongArea;
+    private ImageView image = new ImageView(new Image("/question.png"));
 
     public TestConstructor(MainTester tester, Stage stage) {
         this.tester = tester;
@@ -68,15 +71,19 @@ public class TestConstructor {
         questions.setAlignment(Pos.CENTER);
 
         correctAnswerField.setPrefWidth(250);
-        correctAnswerField.setStyle("-fx-background-color: green;");
         HBox correct = new HBox(10, correctAnswer, correctAnswerField);
         correct.setAlignment(Pos.CENTER);
 
-        wrongAnswersField.setMaxSize(300, 80);
+/*        wrongAnswersField.setMaxSize(300, 80);
         wrongAnswersField.setPrefWidth(200);
-        wrongAnswersField.setStyle("-fx-background-color: red;");
         removeAnswer.setDisable(true);
         HBox wrong = new HBox(5, wrongAnswer, wrongAnswersField, addAnswer, removeAnswer);
+        wrong.setAlignment(Pos.CENTER);*/
+
+        wrongArea = new TextArea();
+        wrongArea.setMaxSize(330, 100);
+        wrongAnswer.setWrapText(true);
+        HBox wrong = new HBox(5, wrongAnswer, wrongArea, image);
         wrong.setAlignment(Pos.CENTER);
 
         answersBox.setAlignment(Pos.CENTER);
@@ -89,17 +96,25 @@ public class TestConstructor {
     }
 
     private void addEventHandler() {
+        image.setOnMouseClicked(event ->
+                makeInformationWindow(Alert.AlertType.INFORMATION, "Каждый новый ответ пишите на новой строке", null, null));
+
         addQuestion.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 String theme = (String) themeField.getValue();
                 String question = questionArea.getText();
                 String correctAnswer = correctAnswerField.getText();
-                String wrongAnswers = makeWrongAnswersForBase(wrongAnswersField.getText(), answers);
+                String wrongAnswers = makeWrongAnswersForBase(wrongArea.getText());
 
                 if(themeField.getValue() == null ||
                         theme.equals("") || question.equals("") || correctAnswer.equals("")
-                        || isFieldEmpty(answers) || wrongAnswersField.getText().equals("")) {
+                        || wrongArea.getText().equals("")) {
                     makeInformationWindow(Alert.AlertType.ERROR, TesterResources.ENTER_ALL_FIELDS, null, null);
+                    return;
+                }
+
+                if(wrongAnswers == null) {
+                    makeInformationWindow(Alert.AlertType.ERROR, "Неправильных ответов должно быть не больше 5", null, null);
                     return;
                 }
 
@@ -107,20 +122,18 @@ public class TestConstructor {
                 dataHelper.save(theme, question, correctAnswer, wrongAnswers);
                 questionArea.setText("");
                 correctAnswerField.setText("");
-                wrongAnswersField.setText("");
-                for (TextField answer: answers) {
-                    answer.setText("");
-                }
+                wrongArea.setText("");
+
                 makeInformationWindow(Alert.AlertType.INFORMATION, TesterResources.SAVED, null, null);
             }
         });
         menu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                stage.setScene(tester.getMainPage().getScene());
+                stage.setScene(new EvgMainPage(stage, tester).getScene());
             }
         });
-        addAnswer.setOnAction(new EventHandler<ActionEvent>() {
+/*        addAnswer.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if(answers.size() == 0) {
@@ -129,7 +142,6 @@ public class TestConstructor {
 
                 TextField newAnswer = new TextField();
                 newAnswer.setMaxWidth(250);
-                newAnswer.setStyle("-fx-background-color: red;");
                 answersBox.getChildren().add(newAnswer);
                 answers.add(newAnswer);
 
@@ -150,7 +162,7 @@ public class TestConstructor {
                     removeAnswer.setDisable(true);
                 }
             }
-        });
+        });*/
     }
 
     private boolean isFieldEmpty(List<TextField> answers) {

@@ -46,4 +46,22 @@ public class Helper {
 
         return String.valueOf(builder);
     }
+
+    public static String makeWrongAnswersForBase(String wrongAnswers) {
+        StringBuilder builder = new StringBuilder();
+        String[] answers = wrongAnswers.split("\n");
+
+        for (int i = 1; i < answers.length; i++) {
+            builder.append(answers[i]).append("\\,");
+        }
+
+        builder.append(answers[0]);
+
+        System.out.println(builder);
+
+        if(answers.length > 5)
+            return null;
+
+        return String.valueOf(builder);
+    }
 }
